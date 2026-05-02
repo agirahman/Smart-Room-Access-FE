@@ -1,5 +1,4 @@
 import { getLogs } from "@/libs/action/data";
-import Header from "./Header";
 import Controls from "./Control";
 import List from "./List";
 import { Pagination } from "@/components/ui/Pagination";
@@ -61,7 +60,6 @@ const LogsPage = async ({ searchParams }: LogsPageProps) => {
 
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8">
-      <Header />
       <Controls />
       <List logs={paginatedLogs} />
       <Pagination currentPage={currentPage} totalPages={totalPages} />
