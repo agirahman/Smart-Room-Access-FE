@@ -1,5 +1,4 @@
-import React from 'react'
-import { getLogs, AccessLog } from "@/libs/action/data";
+import { getLogs } from "@/libs/action/data";
 import Header from "./Header";
 import Controls from "./Control";
 import List from "./List";
