@@ -1,22 +1,11 @@
-// src/app/dashboard/logs/page.tsx
-import { getLogs } from "@/libs/action/data";
+import LogsPage from "@/components/(Logs)"
+import { LogsPageProps } from "@/types/types"
 
-export default async function LogsPage() {
-  const logs = await getLogs(); // Memanggil data langsung dari backend
-
+const page = ({ searchParams }: LogsPageProps) => {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Akses Log Terbaru</h1>
-      <div className="bg-white dark:bg-zinc-900 rounded-lg shadow">
-        {logs.map((log) => (
-          <div key={log.id} className="p-4 border-b last:border-0">
-            <p className="font-medium">{log.user_name} - {log.room}</p>
-            <span className={log.status === 'allowed' ? 'text-green-500' : 'text-red-500'}>
-              {log.status.toUpperCase()}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    <LogsPage searchParams={searchParams} />
+  )
 }
+
+
+export default page
