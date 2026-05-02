@@ -22,23 +22,32 @@ export interface AccessLog {
   timestamp: string;
 }
 
-export async function getUsers() {
+export interface LogsResponse {
+  logs: AccessLog[];
+}
+
+export interface UsersResponse {
+  users: User[];
+}
+
+export async function getUsers(): Promise<User[]> {
   try {
-    const response = await apiFetch<{ success: boolean; data: User[] }>("/users");
-    return response.data;
+    // Backend returns { users: [...] } inside the data property if using sendResponse helper
+    const response = await apiFetch<{ users: User[] }>("/users");
+    return response.users || [];
   } catch (error) {
     console.error("Failed to fetch users:", error);
     return [];
   }
 }
 
-export async function getLogs() {
+export async function getLogs(): Promise<LogsResponse> {
   try {
-    const response = await apiFetch<{ success: boolean; data: AccessLog[] }>("/logs");
-    return response.data;
+    const response = await apiFetch<LogsResponse>("/logs");
+    return response;
   } catch (error) {
     console.error("Failed to fetch logs:", error);
-    return [];
+    return { logs: [] };
   }
 }
 
