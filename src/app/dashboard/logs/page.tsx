@@ -1,9 +1,11 @@
 import LogsPage from "@/components/(Logs)"
+import { LogsPageProps } from "@/types/types"
 
-const page = () => {
+const page = ({ searchParams }: LogsPageProps) => {
   return (
-    <LogsPage />
+    <LogsPage searchParams={searchParams} />
   )
 }
+
 
 export default page

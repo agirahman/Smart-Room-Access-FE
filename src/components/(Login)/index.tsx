@@ -27,7 +27,9 @@ const LoginPage = () => {
         setError(result.message || 'Login failed')
       }
     } catch (err) {
-      setError('An unexpected error occurred')
+        if (err instanceof Error){
+            setError('An unexpected error occurred')
+        }
     } finally {
       setLoading(false)
     }

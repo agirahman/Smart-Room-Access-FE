@@ -1,2 +1,13 @@
 @import "tailwindcss";
+@import "react-day-picker/dist/style.css";
 
+
+@layer utilities {
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .animate-shine {
+    animation: shine 2s infinite;
+  }
+}

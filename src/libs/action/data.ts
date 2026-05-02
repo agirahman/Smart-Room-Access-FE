@@ -16,11 +16,14 @@ export interface User {
 export interface AccessLog {
   id: number;
   user_id: number;
-  user_name: string;
+  user_name?: string; // from join
+  name?: string; // from join
   room: string;
   status: 'allowed' | 'denied';
-  timestamp: string;
+  photo_url?: string;
+  access_time: string;
 }
+
 
 export interface LogsResponse {
   logs: AccessLog[];

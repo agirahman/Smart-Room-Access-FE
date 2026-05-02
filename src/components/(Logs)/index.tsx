@@ -1,21 +1,74 @@
-// src/app/dashboard/logs/page.tsx
-import { getLogs } from "@/libs/action/data";
+import React from 'react'
+import { getLogs, AccessLog } from "@/libs/action/data";
+import Header from "./Header";
+import Controls from "./Control";
+import List from "./List";
+import { Pagination } from "@/components/ui/Pagination";
+import { LogsPageProps } from '@/types/types'
 
-export default async function LogsPage() {
-  const apiResponse = await getLogs(); // Memanggil data langsung dari backend
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Akses Log Terbaru</h1>
-      <div className="rounded-lg shadow">
-        {apiResponse.logs.map((log) => (
-          <div key={log.id} className="p-4 border-b last:border-0">
-            <p className="font-medium">{log.user_name} - {log.room}</p>
-            <span className={log.status === 'allowed' ? 'text-green-500' : 'text-red-500'}>
-              {log.status.toUpperCase()}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+const LogsPage = async ({ searchParams }: LogsPageProps) => {
+  const { q, status, order = 'desc', start, end, page = '1' } = await searchParams;
+  const apiResponse = await getLogs();
+  
+  let filteredLogs = [...apiResponse.logs];
+
+  // Search Filter
+  if (q) {
+    const query = q.toLowerCase();
+    filteredLogs = filteredLogs.filter(log => 
+      log.user_name?.toLowerCase().includes(query) || 
+      log.name?.toLowerCase().includes(query) ||
+      log.room.toLowerCase().includes(query)
+    );
+  }
+
+  // Status Filter
+  if (status && status !== 'all') {
+    filteredLogs = filteredLogs.filter(log => log.status === status);
+  }
+
+  // Date Range Filter
+  if (start || end) {
+    const startDate = start ? new Date(start) : null;
+    const endDate = end ? new Date(end) : null;
+    
+    if (endDate) endDate.setHours(23, 59, 59, 999);
+
+    filteredLogs = filteredLogs.filter(log => {
+      const logDate = new Date(log.access_time);
+      if (startDate && logDate < startDate) return false;
+      if (endDate && logDate > endDate) return false;
+      return true;
+    });
+  }
+
+  // Sorting (Date)
+  filteredLogs.sort((a, b) => {
+    const dateA = new Date(a.access_time).getTime();
+    const dateB = new Date(b.access_time).getTime();
+    return order === 'asc' ? dateA - dateB : dateB - dateA;
+  });
+
+  // Pagination Logic
+  const itemsPerPage = 10;
+  const currentPage = parseInt(page);
+  const totalItems = filteredLogs.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+  const paginatedLogs = filteredLogs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
+
+  return (
+    <div className="max-w-6xl mx-auto p-4 md:p-8">
+      <Header />
+      <Controls />
+      <List logs={paginatedLogs} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
+    </div>
+  )
 }
+
+
+export default LogsPage
