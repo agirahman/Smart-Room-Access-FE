@@ -84,7 +84,7 @@ const Controls = () => {
           {/* Sort */}
           <button 
             onClick={toggleSort}
-            className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 flex items-center gap-2 text-white hover:bg-zinc-800 transition-all border border-zinc-800"
+            className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 flex items-center gap-2 text-white hover:bg-zinc-800 transition-all"
           >
             {sortOrder === 'desc' ? <SortDescendingIcon size={20} /> : <SortAscendingIcon size={20} />}
             <span className="text-sm font-medium">Date</span>
