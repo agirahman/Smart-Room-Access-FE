@@ -21,7 +21,7 @@ const LoginPage = () => {
     try {
       const result = await loginAction(formData)
       if (result.success) {
-        router.push('/dashboard/logs')
+        router.push('/dashboard')
         router.refresh()
       } else {
         setError(result.message || 'Login failed')
@@ -37,7 +37,6 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#09090b] text-white p-4">
-      {/* Ambient Background Effect */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px]" />

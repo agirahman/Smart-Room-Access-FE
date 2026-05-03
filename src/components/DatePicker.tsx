@@ -45,7 +45,7 @@ export function DatePicker({ date, setDate, placeholder = "Pick a date" }: DateP
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 z-[110] bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl p-4 animate-in fade-in zoom-in-95 duration-200 origin-top-left">
+        <div className="absolute top-full left-0 mt-2 z-110 bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl p-4 animate-in fade-in zoom-in-95 duration-200 origin-top-left">
           <div className="flex items-center justify-between mb-4 border-b border-zinc-800 pb-2">
             <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Select Date</span>
             <button 
