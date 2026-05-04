@@ -8,3 +8,9 @@ export interface LogsPageProps {
     page?: string;
   }>
 }
+
+
+export interface HeaderProps {
+  title: string;
+  description: string;
+}
