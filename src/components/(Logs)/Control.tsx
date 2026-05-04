@@ -5,6 +5,7 @@ import { MagnifyingGlassIcon, FunnelIcon, SortAscendingIcon, SortDescendingIcon,
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useDebounce } from '@/hooks/useDebounce'
 import { DatePicker } from '@/components/DatePicker'
+import { formatLocalDate } from '@/libs/utils'
 
 
 const Controls = () => {
@@ -100,13 +101,13 @@ const Controls = () => {
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <DatePicker 
             date={startDate ? new Date(startDate) : undefined}
-            setDate={(date) => handleFilterChange('start', date ? date.toISOString().split('T')[0] : '')}
+            setDate={(date) => handleFilterChange('start', date ? formatLocalDate(date) : '')}
             placeholder="Start date"
           />
           <span className="text-zinc-700 font-bold">/</span>
           <DatePicker 
             date={endDate ? new Date(endDate) : undefined}
-            setDate={(date) => handleFilterChange('end', date ? date.toISOString().split('T')[0] : '')}
+            setDate={(date) => handleFilterChange('end', date ? formatLocalDate(date) : '')}
             placeholder="End date"
           />
         </div>

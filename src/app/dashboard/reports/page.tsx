@@ -1,8 +1,8 @@
 import ReportsPage from "@/components/(Reports)"
 
-const page = () => {
+const page = ({ searchParams }: { searchParams: Promise<{ start?: string; end?: string }> }) => {
   return (
-    <ReportsPage />
+    <ReportsPage searchParams={searchParams} />
   )
 }
 

@@ -7,4 +7,4 @@ export interface LogsPageProps {
     end?: string;
     page?: string;
   }>
-}
+}
