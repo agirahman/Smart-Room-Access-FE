@@ -14,11 +14,16 @@ function parseJwt(token: string) {
     );
     return JSON.parse(jsonPayload);
   } catch (error) {
+    if (error instanceof Error) {
+      console.error(`Token parsing failed in proxy: ${error.message}`);
+    } else {
+      console.error(`An unknown error occurred during token parsing in proxy: ${error}`)
+    }
     return null;
   }
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const refreshToken = request.cookies.get('refreshToken')?.value;
 
