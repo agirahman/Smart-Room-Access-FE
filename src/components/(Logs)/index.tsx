@@ -3,6 +3,7 @@ import Controls from "./Control";
 import List from "./List";
 import { Pagination } from "@/components/ui/Pagination";
 import { LogsPageProps } from '@/types/types'
+import Header  from "../ui/Header"
 
 const LogsPage = async ({ searchParams }: LogsPageProps) => {
   const { q, status, order = 'desc', start, end, page = '1' } = await searchParams;
@@ -59,7 +60,8 @@ const LogsPage = async ({ searchParams }: LogsPageProps) => {
   );
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-8">
+    <div className="max-w-7xl mx-auto p-4 md:p-8">
+      <Header title="Access Logs" description="Monitor and manage all room access activities." />
       <Controls />
       <List logs={paginatedLogs} />
       <Pagination currentPage={currentPage} totalPages={totalPages} />

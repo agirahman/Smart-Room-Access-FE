@@ -1,5 +1,5 @@
 import { getLogs } from "@/libs/action/data"
-import Header from "./Header"
+import Header from "../ui/Header"
 import Controls from "./Control"
 import Stats from "./Stats"
 import Charts from "./Charts"
@@ -34,7 +34,7 @@ const ReportsPage = async ({ searchParams }: ReportsPageProps) => {
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-8">
-      <Header />
+      <Header title="Reports" description="Access statistics and analytics overview." />
       <Controls />
       <Stats logs={filteredLogs} />
       <Charts logs={filteredLogs} />
