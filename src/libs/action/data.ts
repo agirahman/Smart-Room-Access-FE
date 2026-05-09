@@ -56,11 +56,26 @@ export async function getLogs(): Promise<LogsResponse> {
 
 export async function createUser(userData: Partial<User>) {
   try {
-    const response = await apiFetch<{ success: boolean; message: string }>("/users", {
+    const response = await apiFetch<{ user: User }>("/users", {
       method: "POST",
       body: JSON.stringify(userData),
     });
-    return response;
+    return { success: true, message: "", ...response };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { success: false, message: error.message };
+    }
+    return { success: false, message: "An unknown error occurred" };
+  }
+}
+
+export async function updateUser(id: number, userData: Partial<User>) {
+  try {
+    const response = await apiFetch<{ user: User }>(`/users/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(userData),
+    });
+    return { success: true, message: "", ...response };
   } catch (error) {
     if (error instanceof Error) {
       return { success: false, message: error.message };
@@ -71,10 +86,10 @@ export async function createUser(userData: Partial<User>) {
 
 export async function deleteUser(id: number) {
   try {
-    const response = await apiFetch<{ success: boolean; message: string }>(`/users/${id}`, {
+    const response = await apiFetch<{ user: User | null }>(`/users/${id}`, {
       method: "DELETE",
     });
-    return response;
+    return { success: true, message: "", ...response };
   } catch (error) {
     if (error instanceof Error) {
       return { success: false, message: error.message };
