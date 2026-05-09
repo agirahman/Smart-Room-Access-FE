@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { XIcon, IdentificationCardIcon, UserIcon, ClockIcon, CalendarIcon, ShieldCheckIcon } from "@phosphor-icons/react"
 import { User, createUser, updateUser } from '@/libs/action/data'
+import { showSuccess, showError } from '@/components/ui/toast'
 import { useRouter } from 'next/navigation'
 
 interface UserFormProps {
@@ -51,12 +52,15 @@ const UserForm = ({ user, onClose }: UserFormProps) => {
       if (result.success) {
         router.refresh()
         onClose()
+        showSuccess(user?.id ? 'User updated' : 'User created')
       } else {
         setError(result.message || 'Failed to save user')
+        showError(result.message || 'Failed to save user')
       }
     } catch (err) {
       if (err instanceof Error) {
         setError('An error occurred while saving user')
+        showError(err.message)
       }
     } finally {
       setLoading(false)
