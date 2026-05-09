@@ -1,17 +1,20 @@
 "use client"
 
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import React from 'react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/Table'
 import { Pagination } from '@/components/ui/Pagination'
 import { User } from '@/libs/action/data'
-import { TrashIcon, PencilSimpleIcon, IdentificationCardIcon, ClockIcon, CalendarIcon } from "@phosphor-icons/react"
+import { TrashIcon, PencilSimpleIcon, IdentificationCardIcon, ClockIcon, CalendarIcon } from '@phosphor-icons/react'
 import { deleteUser } from '@/libs/action/data'
+import ConfirmDialog from '@/components/ui/ConfirmDialog'
+import { showSuccess, showError } from '@/components/ui/toast'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/libs/utils'
 
@@ -25,16 +28,26 @@ interface UserListProps {
 
 const UserList = ({ users, totalItems, itemsPerPage, currentPage, onEditClick }: UserListProps) => {
   const router = useRouter()
+  const [confirmOpen, setConfirmOpen] = React.useState(false)
+  const [pendingUser, setPendingUser] = React.useState<User | null>(null)
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      const result = await deleteUser(id)
-      if (result.success) {
-        router.refresh()
-      } else {
-        alert(result.message || 'Failed to delete user')
-      }
+  const openConfirm = (user: User) => {
+    setPendingUser(user)
+    setConfirmOpen(true)
+  }
+
+  const handleDelete = async () => {
+    if (!pendingUser) return
+    const id = pendingUser.id
+    setConfirmOpen(false)
+    const result = await deleteUser(id)
+    if (result.success) {
+      router.refresh()
+      showSuccess('User deleted')
+    } else {
+      showError(result.message || 'Failed to delete user')
     }
+    setPendingUser(null)
   }
 
   return (
@@ -79,12 +92,16 @@ const UserList = ({ users, totalItems, itemsPerPage, currentPage, onEditClick }:
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className={cn(
-                      "px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border",
-                      item.role === 'admin' ? "bg-red-500/10 text-red-500 border-red-500/20" :
-                      item.role === 'staff' ? "bg-blue-500/10 text-blue-500 border-blue-500/20" :
-                      "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                    )}>
+                    <span
+                      className={cn(
+                        'px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border',
+                        item.role === 'admin'
+                          ? 'bg-red-500/10 text-red-500 border-red-500/20'
+                          : item.role === 'staff'
+                          ? 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                          : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                      )}
+                    >
                       {item.role}
                     </span>
                   </TableCell>
@@ -102,14 +119,14 @@ const UserList = ({ users, totalItems, itemsPerPage, currentPage, onEditClick }:
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button 
+                      <button
                         onClick={() => onEditClick(item)}
                         className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:text-blue-500 hover:bg-blue-500/10 transition-all"
                       >
                         <PencilSimpleIcon size={18} />
                       </button>
-                      <button 
-                        onClick={() => handleDelete(item.id)}
+                      <button
+                        onClick={() => openConfirm(item)}
                         className="p-2 rounded-lg bg-zinc-800 text-zinc-400 hover:text-red-500 hover:bg-red-500/10 transition-all"
                       >
                         <TrashIcon size={18} />
@@ -122,10 +139,35 @@ const UserList = ({ users, totalItems, itemsPerPage, currentPage, onEditClick }:
           </TableBody>
         </Table>
       </div>
-      <Pagination 
-        currentPage={currentPage}
-        totalPages={Math.ceil(totalItems / itemsPerPage)}
-      />
+      <Pagination currentPage={currentPage} totalPages={Math.ceil(totalItems / itemsPerPage)} />
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Delete user"
+        description="This action will permanently delete the user."
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleDelete}
+      >
+        {pendingUser ? (
+          <div className="space-y-3 text-sm text-zinc-300">
+            <div>
+              <strong className="text-white">Name:</strong> {pendingUser.name}
+            </div>
+            <div>
+              <strong className="text-white">Username:</strong> @{pendingUser.username || 'n/a'}
+            </div>
+            <div>
+              <strong className="text-white">RFID:</strong> {pendingUser.rfid_uid}
+            </div>
+            <div>
+              <strong className="text-white">Role:</strong> {pendingUser.role}
+            </div>
+            <div>
+              <strong className="text-white">Valid Until:</strong> {new Date(pendingUser.valid_until).toLocaleDateString()}
+            </div>
+          </div>
+        ) : null}
+      </ConfirmDialog>
     </div>
   )
 }
