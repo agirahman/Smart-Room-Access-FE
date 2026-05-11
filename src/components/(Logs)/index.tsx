@@ -60,11 +60,28 @@ const LogsPage = async ({ searchParams }: LogsPageProps) => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-8">
-      <Header title="Access Logs" description="Monitor and manage all room access activities." />
-      <Controls />
-      <List logs={paginatedLogs} />
-      <Pagination currentPage={currentPage} totalPages={totalPages} />
+    <div 
+      className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-8"
+      style={{
+        backgroundColor: 'var(--bg-base)',
+        fontFamily: 'var(--font-body)'
+      }}
+    >
+      <div className="max-w-7xl mx-auto">
+        <Header title="Log Akses" description="Pantau dan kelola semua aktivitas akses ruangan." />
+        
+        <div className="mt-8">
+          <Controls />
+        </div>
+        
+        <div className="mt-6">
+          <List logs={paginatedLogs} />
+        </div>
+        
+        <div className="mt-6">
+          <Pagination currentPage={currentPage} totalPages={totalPages} />
+        </div>
+      </div>
     </div>
   )
 }

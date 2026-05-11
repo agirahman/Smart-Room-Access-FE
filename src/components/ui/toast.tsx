@@ -10,9 +10,23 @@ export const AppToaster = () => (
       // Default options for all toasts
       duration: 4000,
       style: {
-        background: '#0f1724',
-        color: '#fff',
-        border: '1px solid rgba(255,255,255,0.04)'
+        background: 'var(--bg-elevated)',
+        color: 'var(--text-primary)',
+        border: '1px solid var(--border-default)',
+        fontFamily: 'var(--font-body)',
+        fontSize: '14px'
+      },
+      success: {
+        iconTheme: {
+          primary: 'var(--status-online)',
+          secondary: 'var(--bg-elevated)'
+        }
+      },
+      error: {
+        iconTheme: {
+          primary: 'var(--status-offline)',
+          secondary: 'var(--bg-elevated)'
+        }
       }
     }}
   />

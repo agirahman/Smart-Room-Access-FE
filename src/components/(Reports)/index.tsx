@@ -52,23 +52,53 @@ const ReportsPage = async ({ searchParams }: ReportsPageProps) => {
   const allRooms = Array.from(new Set(apiResponse.logs.map(l => l.room)))
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-8">
-      <Header title="Reports & Audit" description="Detailed access logs and statistical analysis." />
-      
-      <div className="mb-8">
-        <Controls rooms={allRooms} logs={filteredLogs} />
-      </div>
-
-      <Stats logs={filteredLogs} />
-      
-      <div className="mt-12">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-white tracking-tight">Audit Logs</h3>
-          <span className="text-xs font-bold text-zinc-500 bg-zinc-800/50 px-3 py-1 rounded-full border border-zinc-700/50">
-            {filteredLogs.length} Records Found
-          </span>
+    <div 
+      className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-8"
+      style={{
+        backgroundColor: 'var(--bg-base)',
+        fontFamily: 'var(--font-body)'
+      }}
+    >
+      <div className="max-w-7xl mx-auto">
+        <Header title="Laporan & Audit" description="Log akses mendetail dan analisis statistik." />
+        
+        <div className="mt-8">
+          <Controls rooms={allRooms} logs={filteredLogs} />
         </div>
-        <List logs={filteredLogs} />
+
+        <div className="mt-8">
+          <Stats logs={filteredLogs} />
+        </div>
+        
+        <div className="mt-12">
+          <div 
+            className="flex items-center justify-between mb-6 pb-4 border-b"
+            style={{ borderBottomColor: 'var(--border-default)' }}
+          >
+            <h3 
+              className="text-xl font-bold tracking-tight"
+              style={{
+                fontFamily: 'var(--font-display)',
+                color: 'var(--text-primary)',
+                fontSize: '20px'
+              }}
+            >
+              Log Audit
+            </h3>
+            <span 
+              className="text-xs font-bold px-3 py-1 rounded-lg border"
+              style={{
+                backgroundColor: 'var(--bg-overlay)',
+                color: 'var(--text-muted)',
+                borderColor: 'var(--border-default)',
+                fontFamily: 'var(--font-mono)'
+              }}
+            >
+              {filteredLogs.length} Catatan Ditemukan
+            </span>
+          </div>
+          <List logs={filteredLogs} />
+        </div>
       </div>
     </div>
   )

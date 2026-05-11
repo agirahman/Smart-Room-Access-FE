@@ -28,43 +28,102 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
   if (totalPages <= 1) return null
 
   return (
-    <div className="flex items-center justify-between mt-6 px-2">
-      <p className="text-xs font-medium text-zinc-500">
-        Page <span className="text-white">{currentPage}</span> of <span className="text-white">{totalPages}</span>
+    <div 
+      className="flex items-center justify-between mt-6 px-4 py-4 border rounded-lg"
+      style={{
+        borderColor: 'var(--border-default)',
+        backgroundColor: 'var(--bg-elevated)'
+      }}
+    >
+      <p 
+        className="text-xs font-medium"
+        style={{
+          fontFamily: 'var(--font-body)',
+          color: 'var(--text-muted)'
+        }}
+      >
+        Halaman <span style={{ color: 'var(--text-primary)' }}>{currentPage}</span> dari <span style={{ color: 'var(--text-primary)' }}>{totalPages}</span>
       </p>
       
       <div className="flex items-center gap-2">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage <= 1}
-          className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          className="p-2 rounded-lg border transition-all hover:disabled:opacity-30 disabled:cursor-not-allowed"
+          style={{
+            backgroundColor: 'var(--bg-overlay)',
+            borderColor: 'var(--border-default)',
+            color: 'var(--text-secondary)'
+          }}
         >
-          <CaretLeftIcon size={18} weight="bold" />
+          <CaretLeftIcon size={16} weight="bold" />
         </button>
         
         <div className="flex items-center gap-1">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              className={cn(
-                "w-8 h-8 rounded-lg text-xs font-bold transition-all",
-                currentPage === page
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-                  : "bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-700"
-              )}
-            >
-              {page}
-            </button>
-          ))}
+          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+            if (totalPages <= 5) {
+              return i + 1
+            }
+            if (i < 2) {
+              return i + 1
+            }
+            if (i === 2) {
+              return currentPage
+            }
+            if (i === 3) {
+              return currentPage + 1
+            }
+            return totalPages
+          }).map((page, idx, arr) => {
+            if (idx > 0 && arr[idx - 1] !== page - 1) {
+              return (
+                <div key={`${idx}-ellipsis`} style={{ color: 'var(--text-muted)' }}>
+                  ...
+                </div>
+              )
+            }
+            return (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page as number)}
+                className={cn(
+                  "w-8 h-8 rounded-lg text-xs font-bold transition-all",
+                  currentPage === page
+                    ? "text-white"
+                    : "hover:text-[var(--text-primary)]"
+                )}
+                style={
+                  currentPage === page
+                    ? {
+                        backgroundColor: 'var(--accent-primary)',
+                        color: 'white',
+                        boxShadow: 'var(--shadow-accent)'
+                      }
+                    : {
+                        backgroundColor: 'var(--bg-overlay)',
+                        borderColor: 'var(--border-default)',
+                        color: 'var(--text-secondary)',
+                        border: '1px solid var(--border-default)'
+                      }
+                }
+              >
+                {page}
+              </button>
+            )
+          })}
         </div>
 
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          className="p-2 rounded-lg border transition-all hover:disabled:opacity-30 disabled:cursor-not-allowed"
+          style={{
+            backgroundColor: 'var(--bg-overlay)',
+            borderColor: 'var(--border-default)',
+            color: 'var(--text-secondary)'
+          }}
         >
-          <CaretRightIcon size={18} weight="bold" />
+          <CaretRightIcon size={16} weight="bold" />
         </button>
       </div>
     </div>

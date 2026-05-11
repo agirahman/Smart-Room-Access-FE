@@ -17,30 +17,56 @@ const LatestEventCard = ({ event }: { event: AccessEvent | null }) => {
   const allowed = event?.status === 'allowed'
 
   return (
-    <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 rounded-3xl overflow-hidden">
-      <div className="px-5 py-4 border-b border-zinc-800/50 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-white uppercase tracking-widest">Latest Access</h3>
+    <div 
+      className="border rounded-lg overflow-hidden flex flex-col"
+      style={{
+        backgroundColor: 'var(--bg-elevated)',
+        borderColor: 'var(--border-default)',
+        boxShadow: 'var(--shadow-md)'
+      }}
+    >
+      <div 
+        className="px-6 py-4 border-b flex items-center justify-between"
+        style={{
+          borderBottomColor: 'var(--border-subtle)',
+          fontFamily: 'var(--font-body)'
+        }}
+      >
+        <h3 
+          className="text-sm font-bold uppercase tracking-wide"
+          style={{
+            fontFamily: 'var(--font-body)',
+            color: 'var(--text-muted)',
+            letterSpacing: '0.08em'
+          }}
+        >
+          Akses Terbaru
+        </h3>
         {event && (
-          <span className={cn(
-            'flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border',
-            allowed
-              ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
-              : 'text-red-400 bg-red-500/10 border-red-500/20'
-          )}>
+          <span 
+            className={cn(
+              'flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border'
+            )}
+            style={{
+              backgroundColor: allowed ? 'var(--status-online-muted)' : 'var(--status-offline-muted)',
+              color: allowed ? 'var(--status-online)' : 'var(--status-offline)',
+              borderColor: allowed ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'
+            }}
+          >
             {allowed
               ? <CheckCircleIcon size={12} weight="fill" />
               : <WarningCircleIcon size={12} weight="fill" />
             }
-            {event.status}
+            {event.status === 'allowed' ? 'DITERIMA' : 'DITOLAK'}
           </span>
         )}
       </div>
 
       {event ? (
-        <div className="p-5 space-y-4">
+        <div className="p-6 space-y-4">
           {/* Photo */}
           {event.photo_url ? (
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-zinc-800">
+            <div className="relative w-full aspect-video rounded-lg overflow-hidden border" style={{ borderColor: 'var(--border-default)' }}>
               <Image
                 src={event.photo_url}
                 alt="Latest capture"
@@ -50,56 +76,93 @@ const LatestEventCard = ({ event }: { event: AccessEvent | null }) => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3">
-                <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">Evidence Capture</span>
+                <span className="text-xs text-white/70 uppercase font-bold tracking-wider" style={{ fontFamily: 'var(--font-mono)' }}>
+                  BUKTI CAPTURE
+                </span>
               </div>
             </div>
           ) : (
-            <div className="w-full aspect-video rounded-2xl bg-zinc-800/50 border border-zinc-800 flex flex-col items-center justify-center gap-2">
-              <ImageIcon size={32} className="text-zinc-600" />
-              <span className="text-xs text-zinc-600">No photo captured</span>
+            <div 
+              className="w-full aspect-video rounded-lg border flex flex-col items-center justify-center gap-2"
+              style={{
+                backgroundColor: 'var(--bg-overlay)',
+                borderColor: 'var(--border-default)'
+              }}
+            >
+              <ImageIcon size={32} style={{ color: 'var(--text-muted)' }} />
+              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Tidak ada foto terambil</span>
             </div>
           )}
 
           {/* User Info */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 font-bold text-lg uppercase">
+              <div 
+                className="w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold uppercase"
+                style={{
+                  backgroundColor: 'var(--accent-muted)',
+                  color: 'var(--accent-primary)'
+                }}
+              >
                 {event.user_name ? event.user_name[0] : '?'}
               </div>
               <div>
-                <div className="font-bold text-white">{event.user_name || 'Unknown User'}</div>
+                <div 
+                  className="font-bold"
+                  style={{
+                    fontFamily: 'var(--font-body)',
+                    color: 'var(--text-primary)'
+                  }}
+                >
+                  {event.user_name || 'Pengguna Tidak Dikenal'}
+                </div>
                 {event.user_role && (
-                  <div className="text-xs text-zinc-500 capitalize">{event.user_role}</div>
+                  <div 
+                    className="text-xs capitalize"
+                    style={{
+                      fontFamily: 'var(--font-body)',
+                      color: 'var(--text-muted)'
+                    }}
+                  >
+                    {event.user_role}
+                  </div>
                 )}
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 pt-1">
-              <div className="flex items-center gap-2 text-xs text-zinc-400">
-                <MapPinIcon size={14} className="text-zinc-600" />
+            <div className="grid grid-cols-2 gap-2 pt-2 text-xs" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}>
+              <div className="flex items-center gap-2">
+                <MapPinIcon size={14} style={{ color: 'var(--text-muted)' }} />
                 {event.room}
               </div>
-              <div className="flex items-center gap-2 text-xs text-zinc-400">
-                <ClockIcon size={14} className="text-zinc-600" />
+              <div className="flex items-center gap-2">
+                <ClockIcon size={14} style={{ color: 'var(--text-muted)' }} />
                 {new Date(event.timestamp).toLocaleTimeString('id-ID')}
               </div>
             </div>
 
-            <div className={cn(
-              'text-xs px-3 py-2 rounded-xl border',
-              allowed
-                ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400'
-                : 'bg-red-500/5 border-red-500/20 text-red-400'
-            )}>
+            <div 
+              className={cn('text-xs px-3 py-2 rounded-lg border')}
+              style={{
+                backgroundColor: allowed ? 'var(--status-online-muted)' : 'var(--status-offline-muted)',
+                color: allowed ? 'var(--status-online)' : 'var(--status-offline)',
+                borderColor: allowed ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)',
+                fontFamily: 'var(--font-body)'
+              }}
+            >
               {event.message}
             </div>
           </div>
         </div>
       ) : (
         <div className="p-8 flex flex-col items-center justify-center text-center gap-3">
-          <UserCircleIcon size={40} className="text-zinc-700" />
-          <p className="text-zinc-500 text-sm">No recent access</p>
-          <p className="text-zinc-600 text-xs">Events will appear here when someone taps their card</p>
+          <UserCircleIcon size={40} style={{ color: 'var(--text-muted)' }} />
+          <p style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-body)' }}>
+            Tidak ada akses terakhir
+          </p>
+          <p style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)', fontSize: '12px' }}>
+            Event akan muncul ketika seseorang menyentuh kartu
+          </p>
         </div>
       )}
     </div>
@@ -110,29 +173,58 @@ const LatestEventCard = ({ event }: { event: AccessEvent | null }) => {
 const AccessHistoryItem = ({ log }: { log: AccessLog }) => {
   const allowed = log.status === 'allowed'
   return (
-    <div className="flex items-center gap-3 py-3 border-b border-zinc-800/50 last:border-0">
-      <div className={cn(
-        'w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0',
-        allowed ? 'bg-emerald-500/10' : 'bg-red-500/10'
-      )}>
+    <div 
+      className="flex items-center gap-3 py-3 border-b last:border-0"
+      style={{ borderBottomColor: 'var(--border-subtle)' }}
+    >
+      <div 
+        className={cn('w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0')}
+        style={{
+          backgroundColor: allowed ? 'var(--status-online-muted)' : 'var(--status-offline-muted)'
+        }}
+      >
         {allowed
-          ? <CheckCircleIcon size={18} className="text-emerald-500" weight="duotone" />
-          : <WarningCircleIcon size={18} className="text-red-500" weight="duotone" />
+          ? <CheckCircleIcon size={16} style={{ color: 'var(--status-online)' }} weight="duotone" />
+          : <WarningCircleIcon size={16} style={{ color: 'var(--status-offline)' }} weight="duotone" />
         }
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-bold text-white truncate">
-          {log.name || log.user_name || 'Unknown'}
+        <div 
+          className="text-sm font-bold truncate"
+          style={{
+            fontFamily: 'var(--font-body)',
+            color: 'var(--text-primary)'
+          }}
+        >
+          {log.name || log.user_name || 'Tidak Dikenal'}
         </div>
-        <div className="text-xs text-zinc-500 truncate flex items-center gap-1">
+        <div 
+          className="text-xs truncate flex items-center gap-1"
+          style={{
+            fontFamily: 'var(--font-body)',
+            color: 'var(--text-muted)'
+          }}
+        >
           <MapPinIcon size={10} /> {log.room}
         </div>
       </div>
       <div className="text-right flex-shrink-0">
-        <div className={cn('text-[10px] font-black uppercase', allowed ? 'text-emerald-400' : 'text-red-400')}>
-          {log.status}
+        <div 
+          className={cn('text-xs font-bold uppercase')}
+          style={{
+            fontFamily: 'var(--font-mono)',
+            color: allowed ? 'var(--status-online)' : 'var(--status-offline)'
+          }}
+        >
+          {log.status === 'allowed' ? 'DITERIMA' : 'DITOLAK'}
         </div>
-        <div className="text-[10px] text-zinc-600">
+        <div 
+          className="text-xs"
+          style={{
+            fontFamily: 'var(--font-mono)',
+            color: 'var(--text-muted)'
+          }}
+        >
           {new Date(log.access_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
         </div>
       </div>
@@ -142,24 +234,51 @@ const AccessHistoryItem = ({ log }: { log: AccessLog }) => {
 
 const AccessHistory = ({ logs, loading, error }: { logs: AccessLog[]; loading: boolean; error: string | null }) => {
   return (
-    <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 rounded-3xl overflow-hidden flex flex-col">
-      <div className="px-5 py-4 border-b border-zinc-800/50 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-white uppercase tracking-widest">Access History</h3>
-        <div className="flex items-center gap-1.5">
-          <CalendarIcon size={14} className="text-zinc-500" />
-          <span className="text-xs text-zinc-500">Recent {logs.length} records</span>
+    <div 
+      className="border rounded-lg overflow-hidden flex flex-col"
+      style={{
+        backgroundColor: 'var(--bg-elevated)',
+        borderColor: 'var(--border-default)',
+        boxShadow: 'var(--shadow-md)'
+      }}
+    >
+      <div 
+        className="px-6 py-4 border-b flex items-center justify-between"
+        style={{
+          borderBottomColor: 'var(--border-subtle)'
+        }}
+      >
+        <h3 
+          className="text-sm font-bold uppercase tracking-wide"
+          style={{
+            fontFamily: 'var(--font-body)',
+            color: 'var(--text-muted)',
+            letterSpacing: '0.08em'
+          }}
+        >
+          Riwayat Akses
+        </h3>
+        <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}>
+          <CalendarIcon size={14} />
+          <span>{logs.length} catatan</span>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 max-h-96">
+      <div className="flex-1 overflow-y-auto px-6 max-h-96">
         {loading && (
-          <div className="py-8 text-center text-zinc-500 text-sm">Loading history...</div>
+          <div className="py-8 text-center" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)', fontSize: '14px' }}>
+            Memuat riwayat...
+          </div>
         )}
         {error && (
-          <div className="py-4 text-center text-red-400 text-sm">{error}</div>
+          <div className="py-4 text-center" style={{ color: 'var(--status-offline)', fontFamily: 'var(--font-body)', fontSize: '14px' }}>
+            {error}
+          </div>
         )}
         {!loading && !error && logs.length === 0 && (
-          <div className="py-8 text-center text-zinc-600 text-sm">No access history found</div>
+          <div className="py-8 text-center" style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)', fontSize: '14px' }}>
+            Tidak ada riwayat akses
+          </div>
         )}
         {!loading && !error && logs.map((log) => (
           <AccessHistoryItem key={log.id} log={log} />
@@ -171,14 +290,21 @@ const AccessHistory = ({ logs, loading, error }: { logs: AccessLog[]; loading: b
 
 // ─── Photo Modal ──────────────────────────────────────────────────────────────
 const PhotoModal = ({ url, onClose }: { url: string; onClose: () => void }) => (
-  <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200">
+  <div 
+    className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
+    style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
+  >
     <button
       onClick={onClose}
-      className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all hover:rotate-90"
+      className="absolute top-6 right-6 w-12 h-12 rounded-lg flex items-center justify-center transition-all hover:scale-110"
+      style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        color: 'var(--text-primary)'
+      }}
     >
       <XIcon size={24} weight="bold" />
     </button>
-    <div className="relative max-w-4xl w-full aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-2xl animate-in zoom-in-95 duration-200">
+    <div className="relative max-w-4xl w-full aspect-video rounded-lg overflow-hidden border shadow-lg" style={{ borderColor: 'var(--border-strong)' }}>
       <Image src={url} alt="Access Capture" fill className="object-cover" unoptimized />
     </div>
   </div>
@@ -205,7 +331,7 @@ const MonitoringPage = () => {
         setLogs((payload as AccessLog[]).slice(0, 50))
       } catch (err) {
         if (!mounted) return
-        setError(err instanceof Error ? err.message : 'Failed to fetch logs')
+        setError(err instanceof Error ? err.message : 'Gagal memuat log')
       } finally {
         if (mounted) setLoading(false)
       }
@@ -230,28 +356,36 @@ const MonitoringPage = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-8">
-      <Header
-        title="Live Monitoring"
-        description="Real-time access events and access history for all rooms."
-      />
+    <div 
+      className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-8"
+      style={{
+        backgroundColor: 'var(--bg-base)',
+        fontFamily: 'var(--font-body)'
+      }}
+    >
+      <div className="max-w-7xl mx-auto">
+        <Header
+          title="Pemantauan Live"
+          description="Event akses real-time dan riwayat akses untuk semua ruangan."
+        />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-2">
-        {/* Left: Live Feed — takes 2 columns on large screens */}
-        <div className="lg:col-span-2 min-h-[600px]">
-          <LiveFeed onEvent={handleNewEvent} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+          {/* Left: Live Feed — takes 2 columns on large screens */}
+          <div className="lg:col-span-2 min-h-96">
+            <LiveFeed onEvent={handleNewEvent} />
+          </div>
+
+          {/* Right: Latest capture + history */}
+          <div className="flex flex-col gap-6">
+            <LatestEventCard event={latestEvent} />
+            <AccessHistory logs={logs} loading={loading} error={error} />
+          </div>
         </div>
 
-        {/* Right: Latest capture + history */}
-        <div className="flex flex-col gap-6">
-          <LatestEventCard event={latestEvent} />
-          <AccessHistory logs={logs} loading={loading} error={error} />
-        </div>
+        {photoModal && (
+          <PhotoModal url={photoModal} onClose={() => setPhotoModal(null)} />
+        )}
       </div>
-
-      {photoModal && (
-        <PhotoModal url={photoModal} onClose={() => setPhotoModal(null)} />
-      )}
     </div>
   )
 }

@@ -59,31 +59,41 @@ const UserPage = ({ initialUsers, searchParams }: UserPageProps) => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-8">
-      <Header 
-        title="User Management" 
-        description="Configure access permissions, RFID tags, and schedules for students and staff." 
-      />
-
-      <button onClick={() => showToast("This is a success message!", "success")}>Show Success Toast</button>
-      
-      <Controls onAddClick={handleAddClick} />
-      
-      <UserList 
-        users={paginatedUsers}
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        currentPage={page}
-        onEditClick={handleEditClick}
-      />
-
-      {showForm && (
-        <UserForm 
-          key={selectedUser?.id || 'new'}
-          user={selectedUser}
-          onClose={handleCloseForm}
+    <div 
+      className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-8"
+      style={{
+        backgroundColor: 'var(--bg-base)',
+        fontFamily: 'var(--font-body)'
+      }}
+    >
+      <div className="max-w-7xl mx-auto">
+        <Header 
+          title="Manajemen Pengguna" 
+          description="Konfigurasi izin akses, tag RFID, dan jadwal untuk siswa dan staf." 
         />
-      )}
+
+        <div className="mt-8">
+          <Controls onAddClick={handleAddClick} />
+        </div>
+        
+        <div className="mt-6">
+          <UserList 
+            users={paginatedUsers}
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            currentPage={page}
+            onEditClick={handleEditClick}
+          />
+        </div>
+
+        {showForm && (
+          <UserForm 
+            key={selectedUser?.id || 'new'}
+            user={selectedUser}
+            onClose={handleCloseForm}
+          />
+        )}
+      </div>
     </div>
   )
 }
