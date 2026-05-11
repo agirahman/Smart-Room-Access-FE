@@ -84,6 +84,39 @@ export async function updateUser(id: number, userData: Partial<User>) {
   }
 }
 
+export interface DashboardStats {
+  summary: {
+    total: number;
+    allowed: number;
+    denied: number;
+    users: number;
+  };
+  trend: {
+    label: string;
+    count: number;
+    allowed: number;
+    denied: number;
+  }[];
+  roomStats: {
+    room: string;
+    count: number;
+  }[];
+  roleStats: {
+    role: string;
+    count: number;
+  }[];
+}
+
+export async function getDashboardStats(range: string = 'today'): Promise<DashboardStats | null> {
+  try {
+    const response = await apiFetch<DashboardStats>(`/dashboard/stats?range=${range}`);
+    return response;
+  } catch (error) {
+    console.error("Failed to fetch dashboard stats:", error);
+    return null;
+  }
+}
+
 export async function deleteUser(id: number) {
   try {
     const response = await apiFetch<{ user: User | null }>(`/users/${id}`, {
