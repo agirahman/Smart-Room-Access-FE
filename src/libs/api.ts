@@ -42,7 +42,14 @@ export async function apiFetch<T>(
     urlPath = `/api/v1${urlPath}`;
   }
   
-  const url = new URL(`${API_BASE_URL}${urlPath}`);
+  let url: URL
+  if (typeof window !== 'undefined') {
+    // In the browser, route through the app proxy at /api/v1/... so server
+    // code can read httpOnly cookies and attach Authorization header.
+    url = new URL(urlPath, window.location.origin)
+  } else {
+    url = new URL(`${API_BASE_URL}${urlPath}`)
+  }
   
   if (params) {
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));

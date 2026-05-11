@@ -9,8 +9,19 @@ export interface LogsPageProps {
   }>
 }
 
-
 export interface HeaderProps {
   title: string;
   description: string;
+}
+
+export type AccessEvent = {
+  user_id: number | null
+  uid: string
+  status: 'allowed' | 'denied'
+  room: string
+  message: string
+  photo_url?: string | null
+  timestamp: string
+  user_name?: string | null
+  user_role?: string | null
 }
