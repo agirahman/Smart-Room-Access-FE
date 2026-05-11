@@ -64,9 +64,7 @@ const UserPage = ({ initialUsers, searchParams }: UserPageProps) => {
         title="User Management" 
         description="Configure access permissions, RFID tags, and schedules for students and staff." 
       />
-
-      <button onClick={() => showToast("This is a success message!", "success")}>Show Success Toast</button>
-      
+            
       <Controls onAddClick={handleAddClick} />
       
       <UserList 

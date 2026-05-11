@@ -213,7 +213,7 @@ const DashboardPage = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col">
             {/* Trend Chart */}
             <div className="lg:col-span-2 bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 p-6 rounded-3xl">
               <div className="flex justify-between items-center mb-6">
@@ -242,11 +242,11 @@ const DashboardPage = () => {
             </div>
 
             {/* Role Distribution */}
-            <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 p-6 rounded-3xl">
+            <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 p-6 rounded-3xl w-full">
               <h3 className="text-white font-bold mb-6 flex items-center gap-2">
                 <UserCheck size={18} className="text-purple-500" /> User Roles
               </h3>
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {stats?.roleStats.map(role => (
                   <div key={role.role} className="flex items-center justify-between p-4 rounded-2xl bg-zinc-800/30">
                     <div className="flex items-center gap-3">
