@@ -3,6 +3,7 @@ import Header from "../ui/Header"
 import Controls from "./Control"
 import Stats from "./Stats"
 import List from "./List"
+import { Pagination } from "@/components/ui/Pagination"
 
 interface ReportsPageProps {
   searchParams: Promise<{
@@ -10,11 +11,12 @@ interface ReportsPageProps {
     end?: string
     q?: string
     room?: string
+    page?: string
   }>
 }
 
 const ReportsPage = async ({ searchParams }: ReportsPageProps) => {
-  const { start, end, q, room } = await searchParams
+  const { start, end, q, room, page } = await searchParams
   const apiResponse = await getLogs()
 
   let filteredLogs = [...apiResponse.logs]
@@ -22,7 +24,7 @@ const ReportsPage = async ({ searchParams }: ReportsPageProps) => {
   // Search Filter (User Name / ID)
   if (q) {
     const query = q.toLowerCase()
-    filteredLogs = filteredLogs.filter((log) => 
+    filteredLogs = filteredLogs.filter((log) =>
       (log.name || log.user_name || '').toLowerCase().includes(query) ||
       (log.user_id?.toString() || '').includes(query)
     )
@@ -51,16 +53,33 @@ const ReportsPage = async ({ searchParams }: ReportsPageProps) => {
   // Get unique rooms for the filter dropdown
   const allRooms = Array.from(new Set(apiResponse.logs.map(l => l.room)))
 
+  filteredLogs.sort((a, b) => {
+    const dateA = new Date(a.access_time).getTime()
+    const dateB = new Date(b.access_time).getTime()
+    return dateB - dateA
+  })
+
+  // Pagination Logic
+  const itemsPerPage = 10
+  const currentPage = parseInt(page || '1')
+  const totalItems = filteredLogs.length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+
+  const paginatedLogs = filteredLogs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-8">
       <Header title="Reports & Audit" description="Detailed access logs and statistical analysis." />
-      
+
       <div className="mb-8">
         <Controls rooms={allRooms} logs={filteredLogs} />
       </div>
 
       <Stats logs={filteredLogs} />
-      
+
       <div className="mt-12">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-bold text-white tracking-tight">Audit Logs</h3>
@@ -68,7 +87,8 @@ const ReportsPage = async ({ searchParams }: ReportsPageProps) => {
             {filteredLogs.length} Records Found
           </span>
         </div>
-        <List logs={filteredLogs} />
+        <List logs={paginatedLogs} />
+        <Pagination currentPage={currentPage} totalPages={totalPages} />
       </div>
     </div>
   )

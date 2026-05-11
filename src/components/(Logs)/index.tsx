@@ -3,19 +3,19 @@ import Controls from "./Control";
 import List from "./List";
 import { Pagination } from "@/components/ui/Pagination";
 import { LogsPageProps } from '@/types/types'
-import Header  from "../ui/Header"
+import Header from "../ui/Header"
 
 const LogsPage = async ({ searchParams }: LogsPageProps) => {
   const { q, status, order = 'desc', start, end, page = '1' } = await searchParams;
   const apiResponse = await getLogs();
-  
+
   let filteredLogs = [...apiResponse.logs];
 
   // Search Filter
   if (q) {
     const query = q.toLowerCase();
-    filteredLogs = filteredLogs.filter(log => 
-      log.user_name?.toLowerCase().includes(query) || 
+    filteredLogs = filteredLogs.filter(log =>
+      log.user_name?.toLowerCase().includes(query) ||
       log.name?.toLowerCase().includes(query) ||
       log.room.toLowerCase().includes(query)
     );
@@ -30,7 +30,7 @@ const LogsPage = async ({ searchParams }: LogsPageProps) => {
   if (start || end) {
     const startDate = start ? new Date(start) : null;
     const endDate = end ? new Date(end) : null;
-    
+
     if (endDate) endDate.setHours(23, 59, 59, 999);
 
     filteredLogs = filteredLogs.filter(log => {
@@ -53,7 +53,7 @@ const LogsPage = async ({ searchParams }: LogsPageProps) => {
   const currentPage = parseInt(page);
   const totalItems = filteredLogs.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  
+
   const paginatedLogs = filteredLogs.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage

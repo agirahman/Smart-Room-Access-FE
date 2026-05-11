@@ -67,7 +67,7 @@ const Stats = ({ logs }: StatsProps) => {
       ))}
 
       {/* Extra info row */}
-      <div className="col-span-2 lg:col-span-4 flex flex-wrap gap-4">
+      <div className="col-span-2 lg:col-span-4 flex sm:justify-start justify-center flex-wrap gap-4">
         <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-xl px-4 py-2.5 flex items-center gap-2">
           <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Rooms:</span>
           <span className="text-sm font-bold text-white">{uniqueRooms}</span>
